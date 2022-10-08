@@ -13,15 +13,9 @@ const knex = require("knex")({
     }
 });
 
-knex.select('*').from('users').then(data => {
-    console.log(data);
-});
-
-
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cors()); // FOR CORS ERROR, you need this middle ware
-
 
 const database = {
     users: [
