@@ -2,9 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt-nodejs")
 const app = express();
 const cors = require("cors");
-const knex = require("knex");
-
-const db = knex({
+const knex = require("knex")({
     client: 'pg',
     connection: {
         host : '127.0.0.1',
@@ -15,8 +13,7 @@ const db = knex({
     }
 });
 
-
-db.select('*').from('users').then(data => {
+knex.select('*').from('users').then(data => {
     console.log(data);
 });
 
@@ -54,10 +51,6 @@ const database = {
     ]
 }
 
-app.get("/", (req, res) => {
-    res.send(database.users);
-})
-
 app.post('/signin', (req, res) => {
     //     // Load hash from your password DB.
     // bcrypt.compare("apples", '$2a$10$N1SUUrEcWWVRCZjWlZX3mOF5KYVW6wN0OxHXdZ3glgFy2NDi9LO7e', function(err, res) {
@@ -65,7 +58,7 @@ app.post('/signin', (req, res) => {
     //     console.log('first guess',res);
     // });
     // bcrypt.compare("veggies", '$2a$10$N1SUUrEcWWVRCZjWlZX3mOF5KYVW6wN0OxHXdZ3glgFy2NDi9LO7e', function(err, res) {
-    //     // res = false
+    //     // res = falses
     //     console.log('second guess',res);
     // });
     if (req.body.email === database.users[0].email && 
@@ -76,45 +69,65 @@ app.post('/signin', (req, res) => {
         }
 })
 
+// .insert({
+    // If you are using Knex.js version 1.0.0 or higher this 
+    // now returns an array of objects. Therefore, the code goes from:
+    // loginEmail[0] --> this used to return the email
+    // TO
+    // loginEmail[0].email --> this now returns the email
+//        email: loginEmail[0].email, // <-- this is the only change!
+//        name: name,
+//        joined: new Date()
+//   })
+
 app.post('/register', (req, res) => {
     const { email, password, name } = req.body;
-    db('users').insert({
+knex('users')
+    .returning('*')
+    .insert({
         email: email,
         name: name,
         joined: new Date()
-    }).then(console.log)
-    res.json(database.users[database.users.length - 1]);
+    }).then(user => {
+        res.json(user[0]);
+    })
+    .catch(err => res.status(400).json('unable to register'));
 })
 
 app.get('/profile/:id', (req, res) => { // This route will be useful and want to update user's name or email in the future
     const { id } = req.params; // if you have the route /student/:id, then the “id” property is available as req.params.id
-    let found = false;
-    database.users.forEach(user => {
-        if (user.id === id) {
-            found = true;
-            return res.json(user);
-        } 
+knex.select('*').from('users').where({id}) // .where({id: id}) can be too but with ES6 if it's the same name then just use .where({id})
+    .then(user => { 
+        if (user.length) {
+            res.json(user[0])
+        } else {
+            res.status(400).json('Not found');
+        }
     })
-    if (!found) {
-        res.status(400).json('not found');
-    }
 })
 
 app.put('/image', (req, res) => { // To update, use put
     const { id } = req.body; 
-    let found = false;
-    database.users.forEach(user => {
-        if (user.id === id) {
-            found = true;
-            user.entries++;
-            return res.json(user.entries);
-        } 
+knex('users').where('id', '=', id)
+    .increment('entries', 1)
+    .returning('entries')
+    .then(entries => {
+        res.json(entries[0].entries);  
     })
-    if (!found) {
-        res.status(400).json('not found');
-    }
+    .catch(err => res.status(400).json('unable to get entries'))
 })
 
 app.listen(3000, () => {
     console.log("App is running on port 3000")
 })
+
+// .then(entries => {
+    // If you are using knex.js version 1.0.0 or higher this now 
+    // returns an array of objects. Therefore, the code goes from:
+    // entries[0] --> this used to return the entries
+    // TO
+    // entries[0].entries --> this now returns the entries
+//     res.json(entries[0].entries);
+//   })
+
+
