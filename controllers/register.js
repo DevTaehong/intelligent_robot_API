@@ -1,5 +1,8 @@
 const handleRegister = (req, res, knex, bcrypt) => {
     const { email, password, name } = req.body;
+    if (!email || !name || !password) { // Security review 3:41
+        return res.status(400).json('incorrect form submission');
+    }
     const hash = bcrypt.hashSync(password);
     knex.transaction(trx => {
         trx
