@@ -5,7 +5,7 @@ const cors = require("cors");
 const knex = require("knex")({
     client: 'pg',
     connection: {
-        host : '127.0.0.1',
+        host : 'postgresql-acute-27108',
         port : 5432,
         user : 'taehong',
         password : '',
