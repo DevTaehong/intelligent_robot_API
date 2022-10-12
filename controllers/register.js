@@ -18,7 +18,6 @@ const handleRegister = (req, res, knex, bcrypt) => {
                 .insert({
                     email: loginEmail[0].email,
                     name: name,
-                    entries: 0,
                     joined: new Date()
                 })
                 .then(user => {
