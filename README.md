@@ -1,4 +1,4 @@
-# how_old_do_I_look
+# how_old_do_I_look_API
 > Are you wondering how old you look like? Go check this application. 
 This app can predict your age from your face in an image and tell whether you look older or younger than your age. 
 I built this application by using powerful machine learning AI. If you want to avoid creating an account, login with 
