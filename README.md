@@ -23,6 +23,7 @@ The purpose of this project is to prove my ability to develop a full-stack appli
 ## Technologies Used
 - React - version 18.2.0
 - Node.js - version 18.12.1
+- Express - version 4.18.1
 - PostgreSQL - version 14.5
 
 
