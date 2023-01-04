@@ -50,4 +50,4 @@ Created by [@devtaehong](https://www.github.com/devtaehong) - feel free to conta
 
 
 ## License
-This project is open source and available under the [MIT License](https://github.com/DevTaehong/how_old_do_I_look/blob/master/LICENSE.md).
+This project is open source and available under the [MIT License](https://github.com/DevTaehong/how_old_do_I_look_API/blob/main/LICENSE.md).
